@@ -1,18 +1,14 @@
 /**
  * utils/scaleUtils.js
  *
- * Shared utilities for the Scale Converter feature.
- * Imported by both NewProject.jsx and SavedProjects.jsx.
+ * Shared utilities for the Scale Converter.
+ * Pure functions only - no storage, no accounts.
  */
-
-import AsyncStorage from '@react-native-async-storage/async-storage'
 
 // ---------------------------------------------------------------------------
 // Constants
 // ---------------------------------------------------------------------------
 
-export const STORAGE_KEY = '@scale_converter_projects'
-export const EDITING_KEY = '@scale_converter_editing_id'
 export const MAX_ENTRIES = 10
 export const UNITS = ['mm', 'cm', 'in', 'ft']
 export const DEFAULT_UNIT = 'cm'
@@ -111,57 +107,6 @@ export function blankProject() {
 }
 
 // ---------------------------------------------------------------------------
-// AsyncStorage persistence
-// ---------------------------------------------------------------------------
-
-export async function loadProjects() {
-  try {
-    const json = await AsyncStorage.getItem(STORAGE_KEY)
-    return json ? JSON.parse(json) : []
-  } catch (e) {
-    console.warn('scaleUtils: failed to load projects', e)
-    return []
-  }
-}
-
-export async function persistProjects(projects) {
-  try {
-    await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(projects))
-  } catch (e) {
-    console.warn('scaleUtils: failed to save projects', e)
-  }
-}
-
-// ---------------------------------------------------------------------------
-// Editing flag – used to pass a project ID from SavedProjects to NewProject
-// ---------------------------------------------------------------------------
-
-export async function setEditingId(id) {
-  try {
-    await AsyncStorage.setItem(EDITING_KEY, id)
-  } catch (e) {
-    console.warn('scaleUtils: failed to set editing id', e)
-  }
-}
-
-export async function getEditingId() {
-  try {
-    return await AsyncStorage.getItem(EDITING_KEY)
-  } catch (e) {
-    console.warn('scaleUtils: failed to get editing id', e)
-    return null
-  }
-}
-
-export async function clearEditingId() {
-  try {
-    await AsyncStorage.removeItem(EDITING_KEY)
-  } catch (e) {
-    console.warn('scaleUtils: failed to clear editing id', e)
-  }
-}
-
-// ---------------------------------------------------------------------------
 // CSV generation
 // ---------------------------------------------------------------------------
 
@@ -187,4 +132,10 @@ export function generateCSV(project) {
   })
 
   return rows.map((r) => r.map((cell) => `"${cell}"`).join(',')).join('\n')
+}
+
+/** Safe filename for an exported project. */
+export function csvFileName(project) {
+  const base = (project.name || 'scale_project').replace(/[^a-zA-Z0-9]/g, '_')
+  return `${base}_scale.csv`
 }
