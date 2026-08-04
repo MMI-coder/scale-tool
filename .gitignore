@@ -34,6 +34,9 @@ yarn-error.*
 .env
 .env*.local
 
+# Claude Code working notes - these belong in ~/.claude, never in the repo
+memory/
+
 # typescript
 *.tsbuildinfo
 

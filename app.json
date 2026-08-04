@@ -1,8 +1,9 @@
 {
   "expo": {
     "scheme": "ScaleConversionToolapp",
-      "experiments": {
-      "typedRoutes": true
+    "experiments": {
+      "typedRoutes": true,
+      "baseUrl": "/scale-tool"
     },
     "name": "ScaleConversionTool_app",
     "slug": "ScaleConversionTool_app",
